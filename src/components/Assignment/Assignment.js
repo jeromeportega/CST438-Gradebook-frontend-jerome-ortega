@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import {DataGrid} from '@mui/x-data-grid';
-import {SERVER_URL} from '../constants.js'
+import {SERVER_URL} from '../../constants.js'
 
 // NOTE:  for OAuth security, http request must have
 //   credentials: 'include' 
@@ -69,7 +69,17 @@ class Assignment extends React.Component {
         )
       },
       {field: 'courseTitle', headerName: 'Course', width: 300},
-      {field: 'dueDate', headerName: 'Due Date', width: 200}
+      {field: 'dueDate', headerName: 'Due Date', width: 200},
+      {
+        field: 'addStudent', headerName: 'Add Student', width: 200, renderCell: (params) => (
+          <Button component={Link}
+                  to={{pathname: '/add-student', courseName: this.state.assignments[params.id].courseTitle}}
+                  variant="outlined" color="primary"
+                  style={{margin: 10}}>
+            Add Student
+          </Button>
+        )
+      },
     ];
 
     const assignmentSelected = this.state.assignments[this.state.selected];
