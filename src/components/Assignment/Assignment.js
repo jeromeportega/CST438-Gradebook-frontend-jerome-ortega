@@ -88,7 +88,7 @@ class Assignment extends React.Component {
                 to='/add-student'
                 variant="outlined" color="secondary"
                 style={{margin: 10}}>
-          Add Student
+          Add Assignment
         </Button>
         <ToastContainer autoClose={1500}/>
       </div>
