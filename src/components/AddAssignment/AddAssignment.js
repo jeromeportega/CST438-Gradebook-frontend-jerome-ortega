@@ -10,7 +10,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import moment from 'moment';
 
-const AddStudent = () => {
+const AddAssignment = () => {
   const [formState, setFormState] = useState({
     assignmentName: '',
     dueDate: moment(),
@@ -30,7 +30,7 @@ const AddStudent = () => {
     return true;
   }
 
-  const addStudent = async () => {
+  const addAssignment = async () => {
     if (validateFormEntries()) {
       try {
         const response = await axios.post(`${SERVER_URL}/assignments`, {
@@ -38,7 +38,7 @@ const AddStudent = () => {
           dueDate: formState.dueDate.format('YYYY-MM-DD'),
         });
         if (response.status === 200) {
-          console.log('Student Added!');
+          console.log('Assignment Added!');
         }
       } catch (e) {
         console.log(e);
@@ -76,7 +76,7 @@ const AddStudent = () => {
       <Grid container spacing={2} style={{padding: '40px'}}>
         <Grid item align="left" md={5}>
           <TextField
-            id="outlined-basic"
+            id="assignment-name-input"
             variant="outlined"
             label="Assignment Name"
             onChange={onAssignmentNameChange}
@@ -90,6 +90,7 @@ const AddStudent = () => {
           <FormControl fullWidth>
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DesktopDatePicker
+                id="assignment-due-date-picker"
                 label="Due Date"
                 inputFormat="MM/DD/YYYY"
                 value={formState.dueDate.toDate()}
@@ -102,7 +103,7 @@ const AddStudent = () => {
         <Grid item md={7}/>
         <Grid item md={5}>
           <TextField
-            id="course-name"
+            id="course-name-input"
             variant="outlined"
             label="Course Name"
             onChange={onCourseChange}
@@ -113,7 +114,7 @@ const AddStudent = () => {
         </Grid>
         <Grid item md={7}/>
         <Grid item md={4} align="left">
-          <Button id="Submit" variant="outlined" color="primary" onClick={addStudent} style={{marginRight: 10}}>
+          <Button id="Submit" variant="outlined" color="primary" onClick={addAssignment} style={{marginRight: 10}}>
             Submit
           </Button>
           <Button id="Submit" variant="outlined" color="warning" onClick={cancelButtonHandler}>
@@ -125,4 +126,4 @@ const AddStudent = () => {
   )
 }
 
-export default AddStudent;
+export default AddAssignment;
