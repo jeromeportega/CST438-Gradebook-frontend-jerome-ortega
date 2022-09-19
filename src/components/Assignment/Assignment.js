@@ -70,16 +70,6 @@ class Assignment extends React.Component {
       },
       {field: 'courseTitle', headerName: 'Course', width: 300},
       {field: 'dueDate', headerName: 'Due Date', width: 200},
-      {
-        field: 'addStudent', headerName: 'Add Student', width: 200, renderCell: (params) => (
-          <Button component={Link}
-                  to={{pathname: '/add-student', courseName: this.state.assignments[params.id].courseTitle}}
-                  variant="outlined" color="primary"
-                  style={{margin: 10}}>
-            Add Student
-          </Button>
-        )
-      },
     ];
 
     const assignmentSelected = this.state.assignments[this.state.selected];
@@ -93,6 +83,12 @@ class Assignment extends React.Component {
                 variant="outlined" color="primary" disabled={this.state.assignments.length === 0}
                 style={{margin: 10}}>
           Grade
+        </Button>
+        <Button component={Link}
+                to='/add-student'
+                variant="outlined" color="secondary"
+                style={{margin: 10}}>
+          Add Student
         </Button>
         <ToastContainer autoClose={1500}/>
       </div>

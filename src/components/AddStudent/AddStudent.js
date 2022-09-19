@@ -3,27 +3,43 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Button, TextField, Grid, Divider} from '@mui/material';
 import Typography from "@mui/material/Typography";
 import {useHistory} from "react-router-dom";
+import {SERVER_URL} from '../../constants.js';
+import axios from 'axios';
 
-const AddStudent = ({location}) => {
+const AddStudent = () => {
   const [formState, setFormState] = useState({
     studentEmail: '',
     studentName: '',
-    courseId: 0
-  })
+    statusCode: 0
+  });
   const history = useHistory();
   const addStudent = async () => {
-    console.log("adding student")
+    try {
+      const response = await axios.post(`${SERVER_URL}/students`, formState);
+      if (response.status === 200) {
+        console.log('Student Added!');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
+  
   const cancelButtonHandler = () => history.goBack();
+
+  const onStudentEmailChange = (e) => setFormState({
+    ...formState,
+    studentEmail: e.currentTarget.value,
+  });
+  const onStudentNameChange = (e) => setFormState({
+    ...formState,
+    studentName: e.currentTarget.value,
+  });
 
 
   return (
     <div>
       <Typography variant="h4" component="h4" align="left" style={{padding: '20px 40px'}}>
         Add A Student
-      </Typography>
-      <Typography component="p" align="left" style={{padding: '0 40px'}}>
-        Course Name: {location.courseName}
       </Typography>
       <Divider/>
       <Grid container spacing={2} style={{padding: '40px'}}>
@@ -32,6 +48,8 @@ const AddStudent = ({location}) => {
             id="outlined-basic"
             variant="outlined"
             label="Student Email"
+            onChange={onStudentEmailChange}
+            value={formState.studentEmail}
             required
             fullWidth
           />
@@ -42,6 +60,8 @@ const AddStudent = ({location}) => {
             id="outlined-basic"
             variant="outlined"
             label="Student Name"
+            onChange={onStudentNameChange}
+            value={formState.studentName}
             required
             fullWidth
           />
