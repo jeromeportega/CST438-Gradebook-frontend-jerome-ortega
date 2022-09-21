@@ -11,13 +11,20 @@ import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import moment from 'moment';
 
 const AddAssignment = () => {
+  // Using history hook so we can use the cancel button to go back a page.
+  const history = useHistory();
+
+  // Setting up state for the form.
   const [formState, setFormState] = useState({
     assignmentName: '',
     dueDate: moment(),
     courseName: ''
   });
-  const history = useHistory();
 
+  /**
+   * Validates the form and prevents submission if it doesn't fulfill requirements.
+   * @returns {boolean}
+   */
   const validateFormEntries = () => {
     if (!formState.assignmentName) {
       return false;
@@ -30,6 +37,10 @@ const AddAssignment = () => {
     return true;
   }
 
+  /**
+   * This method performs the POST request to add the assignment.
+   * @returns {Promise<void>}
+   */
   const addAssignment = async () => {
     if (validateFormEntries()) {
       try {
@@ -45,10 +56,11 @@ const AddAssignment = () => {
       }
     }
   };
-
-
+  
+  // This method basically returns to the last page if the cancel button is clicked.
   const cancelButtonHandler = () => history.goBack();
 
+  // The following methods handle state changes to the form state.
   const onAssignmentNameChange = (e) => setFormState({
     ...formState,
     assignmentName: e.currentTarget.value,
@@ -65,7 +77,6 @@ const AddAssignment = () => {
       courseName: e.currentTarget.value,
     });
   }
-
 
   return (
     <div>
