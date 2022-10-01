@@ -87,6 +87,7 @@ class Assignment extends React.Component {
         <Button component={Link}
                 to='/add-assignment'
                 variant="outlined" color="secondary"
+                id="add-assignment-link-button"
                 style={{margin: 10}}>
           Add Assignment
         </Button>
