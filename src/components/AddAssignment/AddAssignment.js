@@ -9,17 +9,19 @@ import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import moment from 'moment';
+import Cookies from "js-cookie";
 
 const AddAssignment = () => {
   // Using history hook so we can use the cancel button to go back a page.
   const history = useHistory();
+  const defaultFormState = {
+    assignmentName: '',
+    dueDate: moment().subtract(1, 'day'),
+    courseId: ''
+  }
 
   // Setting up state for the form.
-  const [formState, setFormState] = useState({
-    assignmentName: '',
-    dueDate: moment(),
-    courseName: ''
-  });
+  const [formState, setFormState] = useState(defaultFormState);
 
   /**
    * Validates the form and prevents submission if it doesn't fulfill requirements.
@@ -30,7 +32,7 @@ const AddAssignment = () => {
       return false;
     }
 
-    if (!formState.courseName) {
+    if (!formState.courseId) {
       return false;
     }
 
@@ -44,19 +46,26 @@ const AddAssignment = () => {
   const addAssignment = async () => {
     if (validateFormEntries()) {
       try {
-        const response = await axios.post(`${SERVER_URL}/assignments`, {
+        const token = Cookies.get('XSRF-TOKEN');
+        const response = await axios.post(`${SERVER_URL}/assignment`, {
           ...formState,
           dueDate: formState.dueDate.format('YYYY-MM-DD'),
+        }, {
+          headers: {
+            "X-XSRF-TOKEN": token,
+          }
         });
         if (response.status === 200) {
           console.log('Assignment Added!');
+          // Go back to assignment list after saving assignment.
+          history.push('/');
         }
       } catch (e) {
         console.log(e);
       }
     }
   };
-  
+
   // This method basically returns to the last page if the cancel button is clicked.
   const cancelButtonHandler = () => history.goBack();
 
@@ -74,7 +83,7 @@ const AddAssignment = () => {
   const onCourseChange = (e) => {
     setFormState({
       ...formState,
-      courseName: e.currentTarget.value,
+      courseId: e.currentTarget.value,
     });
   }
 
@@ -101,34 +110,34 @@ const AddAssignment = () => {
           <FormControl fullWidth>
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DesktopDatePicker
-                id="assignment-due-date-picker"
                 label="Due Date"
                 inputFormat="MM/DD/YYYY"
                 value={formState.dueDate.toDate()}
                 onChange={onDueDateChange}
                 required
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} id="assignment-due-date-picker"/>}
               /></LocalizationProvider>
           </FormControl>
         </Grid>
         <Grid item md={7}/>
         <Grid item md={5}>
           <TextField
-            id="course-name-input"
+            id="course-id-input"
             variant="outlined"
             label="Course Name"
             onChange={onCourseChange}
-            value={formState.courseName}
+            value={formState.courseId}
             required
             fullWidth
           />
         </Grid>
         <Grid item md={7}/>
         <Grid item md={4} align="left">
-          <Button id="Submit" variant="outlined" color="primary" onClick={addAssignment} style={{marginRight: 10}}>
+          <Button id="add-assignment-submit-button" variant="outlined" color="primary" onClick={addAssignment}
+                  style={{marginRight: 10}}>
             Submit
           </Button>
-          <Button id="Submit" variant="outlined" color="warning" onClick={cancelButtonHandler}>
+          <Button id="add-assignment-cancel-button" variant="outlined" color="warning" onClick={cancelButtonHandler}>
             Cancel
           </Button>
         </Grid>
